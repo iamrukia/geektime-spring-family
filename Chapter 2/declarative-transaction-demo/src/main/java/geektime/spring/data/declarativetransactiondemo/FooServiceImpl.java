@@ -1,5 +1,6 @@
 package geektime.spring.data.declarativetransactiondemo;
 
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class FooServiceImpl implements FooService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private FooService fooService;
 
     @Override
     @Transactional
@@ -23,8 +26,11 @@ public class FooServiceImpl implements FooService {
         throw new RollbackException();
     }
 
+    @Transactional(rollbackFor = RollbackException.class)
     @Override
     public void invokeInsertThenRollback() throws RollbackException {
+        //fooService.insertThenRollback();
+        //((FooService)(AopContext.currentProxy())).insertThenRollback();
         insertThenRollback();
     }
 }
