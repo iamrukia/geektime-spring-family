@@ -16,10 +16,10 @@ public class FooServiceImpl implements FooService {
     private FooService fooService;
 
     @Override
-    @Transactional(rollbackFor = RollbackException.class, propagation = Propagation.REQUIRES_NEW)
+    @Transactional(rollbackFor = RollbackException.class, propagation = Propagation.NESTED)
     public void insertThenRollback() throws RollbackException {
         jdbcTemplate.execute("INSERT INTO FOO (BAR) VALUES ('BBB')");
-        throw new RollbackException();
+  //      throw new RollbackException();
     }
 
     @Override
@@ -31,6 +31,6 @@ public class FooServiceImpl implements FooService {
         } catch (RollbackException e) {
             log.error("RollbackException", e);
         }
-//        throw new RuntimeException();
+      throw new RuntimeException();
     }
 }
